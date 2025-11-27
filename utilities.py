@@ -69,8 +69,8 @@ def files_in_directory(directory_path):
 
 def get_rgb(coord):
     x, y = coord
-
-    screenshot = pyautogui.screenshot(region=(x-4, y-4, 9, 9))
+    # print("Get rgb:", x, y)
+    screenshot = pyautogui.screenshot(region=(x-1, y-1, 3, 3))
     img = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 

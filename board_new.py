@@ -70,11 +70,11 @@ class Board:
         return shots
 
     def search_shots(self, shots, remaining_boats):
-        # print("Search Remaining boats:", remaining_boats)
+        print("Search Remaining boats:", remaining_boats)
         # if remaining_boats == []: remaining_boats = ["boat_3"]
         # print("Search Remaining boats:", remaining_boats)
         for x in range(6):
-            if len(shots) >= 7: return shots
+            # if len(shots) >= 7: return shots
             freqs = {}
             for boat in self.boats:
                 if boat.name[0:6] in remaining_boats:

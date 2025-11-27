@@ -3,11 +3,11 @@ from board_new import *
 
 base = None
 
-adj_x = -150
-adj_y = 180
-
-gap_x = 60
-gap_y = 60
+adj_x, adj_y = -150, 182
+gap_x, gap_y = 60, 60
+if small_screen:
+    adj_x, adj_y = -88, 105
+    gap_x, gap_y = 36, 36
 
 def coord(x, y):
     x, y = get_coord(x, y)
@@ -17,17 +17,19 @@ def coord(x, y):
 def get_coord(x, y):
     global base
     if base is None:
+        # print("Looking for normal ai")
         i, found = 0, False
-        while i < 5 and found == False:
+        while i < 5 and not found:
             normal_ai_coords = normal_ai.find()
             if normal_ai_coords:
+                # print("Normal ai found")
                 base = normal_ai_coords[0] + adj_x, normal_ai_coords[1] + adj_y
                 found = True
             sleep(0.1)
             i += 1
     if base:
-        x = base[0] + x * gap_x
-        y = base[1] + y * gap_y
+        x = base[0] + int(x * gap_x)
+        y = base[1] + int(y * gap_y)
         return x, y
 
 def set_coord(x,y):
@@ -76,10 +78,10 @@ def get_result(colours):
 
 def read_board():
     for y in range(10):
-        # text = ""
         for x in range(10):
             coord = get_coord(x, y)
             colours = get_rgb(coord)
             result = get_result(colours)
             main.board[y][x] = result[1]
+            # print("Read board:", x, y, colours, result)
 

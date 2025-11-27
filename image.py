@@ -4,6 +4,11 @@ confidence = 0.8
 full_screen_region = (0, 0, pyautogui.size().width, pyautogui.size().height)
 auto_images = []
 boats = []
+small_screen = True
+image_dir = "images"
+if small_screen:
+    image_dir = "images small"
+
 
 class Image:
     def __init__(self, file_locations, name=None):
@@ -115,31 +120,19 @@ def auto_click():
         if result and result[1] > y_limit:
             image.click()
             print("Auto click:", image.name)
-            if image.name == "images/auto/google_back.jpg":
-                sleep(0.5)
-                home.click()
+            # if image.name == "images/auto/google_back.jpg":
+            #     sleep(0.5)
+            #     home.click()
 
 
-dir = "images/auto/"
-for file in files_in_directory(dir):
-    image = Image(dir + file)
-    auto_images.append(image)
-
-# for image in auto_images:
-#     print(image.name)
+for image_sub_dir, image_list in [('auto', auto_images), ('boats', boats)]:
+    dir = f"{image_dir}/{image_sub_dir}/"
+    for file in files_in_directory(dir):
+        image = Image(dir + file, name=file)
+        image_list.append(image)
 
 
-daz = Image('images/nav/daz.jpg')
-a = Image('images/nav/a.jpg')
-normal_ai = Image('images/nav/normal_ai.jpg')
-fire = Image('images/nav/fire.jpg')
-home = Image('images/nav/home.jpg')
-rematch = Image('images/nav/rematch.jpg')
-
-# i_bluestacks_toolbar_icon = Image("images/restart/bluestacks_toolbar_icon.jpg")
-
-dir = "images/boats/"
-for file in files_in_directory(dir):
-    image = Image(dir + file, name=file)
-    boats.append(image)
-
+normal_ai = Image(f'{image_dir}/nav/normal_ai.jpg')
+fire = Image(f'{image_dir}/nav/fire.jpg')
+rematch = Image(f'{image_dir}/nav/rematch.jpg')
+main_icon = Image(f'{image_dir}/auto/main_icon.jpg') # Done

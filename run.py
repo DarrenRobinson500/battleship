@@ -43,6 +43,7 @@ def get_remaining_boats():
     for boat in boats:
         if boat.find(confidence=0.9):
             remaining_boats.append(boat.name[0:6])
+    print("Remaining boats:", remaining_boats)
     return remaining_boats
 
 
@@ -65,14 +66,17 @@ def finish_game(game_no=1):
         # fire_shots(shots, shoot=False)
         count += 1
 
-def one_round():
+def one_round(shoot=True):
     read_board()
     remaining_boats = get_remaining_boats()
     shots = main.get_shots(remaining_boats=remaining_boats)
-    fire_shots(shots, shoot=False)
+    fire_shots(shots, shoot=shoot)
 
 
 def run(games=1):
+    print("Run time:", timedelta(minutes=games * 4))
+    print()
+    sleep(0.3)
     game_times = []
     rounds_list = []
     for x in range(1, 1 + games):
@@ -101,8 +105,19 @@ def run(games=1):
 pyautogui.hotkey('alt', 'tab')
 sleep(0.5)
 
-run(games=5)
-# one_round()
+run(games=100)
+# get_remaining_boats()
+# one_round(shoot=True)
+# coord(0,0)
+# coord(9,9)
+# print(get_remaining_boats())
+# auto_click()
+
+# read_board()
+
+# for boat in boats:
+#     print(boat, boat.find())
+
 
 sleep(1)
 pyautogui.hotkey('alt', 'tab')

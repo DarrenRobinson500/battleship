@@ -2,7 +2,7 @@ import os
 
 from datetime import datetime, timedelta
 
-def tasks_done_so_far(total_tasks=750):
+def tasks_done_so_far(total_tasks=500):
     # Define start and end of the week
     now = datetime.now()
     start_of_week = now - timedelta(days=now.weekday(), hours=now.hour - 8, minutes=now.minute, seconds=now.second, microseconds=now.microsecond)
@@ -58,4 +58,4 @@ def reset_counter():
 
 
 # Game counter at zero with 120k
-tasks_done_so_far()
+# tasks_done_so_far()
