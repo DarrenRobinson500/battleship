@@ -42,7 +42,7 @@ class Board:
 
         group_one, group_multiple = split_by_length(groups)
 
-        if unfound_boats == 0:
+        if len(remaining_boats) == 1:
             print("All boats found")
             positions = self.best_boat_for_groups(group_multiple, remaining_boats=remaining_boats)
             shots = self.boats_to_shots(positions)
@@ -63,10 +63,10 @@ class Board:
         # print("Post any shots:", shots)
 
         # print()
-        print("Hits:", hits)
-        print("Groups:", groups)
-        print("Boats:", positions)
-        print("Shots:", shots)
+        # print("Hits:", hits)
+        # print("Groups:", groups)
+        # print("Boats:", positions)
+        # print("Shots:", shots)
         return shots
 
     def search_shots(self, shots, remaining_boats):
@@ -76,15 +76,24 @@ class Board:
         for x in range(6):
             if len(shots) >= 7: return shots
             freqs = {}
+            get_extra_shots = False
             for boat in self.boats:
                 if boat.name[0:6] in remaining_boats:
                     freq = self.freq_one_boat(boat, shots, remaining_boats)
-                    # print("Search:", boat, freq)
+                    if len(freq) == 0:
+                        get_extra_shots = True
+                        print("Getting extra shots")
+                        freq = self.freq_one_boat(boat, [], remaining_boats)
+                    # print("Search:", boat, len(freq), freq)
                     freqs = add_dicts(freqs, freq)
             freqs = dict(sorted(freqs.items(), key=lambda item: item[1], reverse=True))
-            shots = shots + list(freqs.keys())[:1]
+            if get_extra_shots:
+                shots = shots + list(freqs.keys())
+                shots = self.clean_shots(shots)
+            else:
+                shots = shots + list(freqs.keys())[:1]
 
-        print("Search shots:", shots)
+        # print("Search shots:", shots)
         return self.clean_shots(shots)
 
     def search_shots_old(self, shots, remaining_boats):
@@ -213,7 +222,7 @@ class Board:
     def surround_shots(self, groups, shots):
         # print("Surround shots:", groups, shots)
         if len(shots) >= 7: return shots
-        for group in groups:
+        for group in reversed(groups):
             for shot in group:
                 result = self.surround_shots_single(shot)
                 if len(result) > 0:

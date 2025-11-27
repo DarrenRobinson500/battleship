@@ -58,13 +58,17 @@ def fire_shots(shots, shoot=True):
             if result:
                 y, x = result
                 coord(x, y)
-                sleep(0.1)
+                sleep(0.2)
+                count += 1
         if fire.find():
             firing = False
+            print("Shots made:", count)
             if shoot:
                 fire.click()
             sleep(2)
-        count += 1
+            return count
+    return count
+
 
 def get_result(colours):
     r, g, b = colours
@@ -74,12 +78,26 @@ def get_result(colours):
     if r > 150: result = "H", "hit"
     return result
 
+# def read_board():
+#     for y in range(10):
+#         # text = ""
+#         for x in range(10):
+#             coord = get_coord(x, y)
+#             colours = get_rgb(coord)
+#             result = get_result(colours)
+#             main.board[y][x] = result[1]
+
 def read_board():
+    # Take ONE screenshot of the whole board area
+    screenshot = pyautogui.screenshot() #region=(board_x, board_y, board_width, board_height))
+    img_rgb = np.array(screenshot)
+
     for y in range(10):
-        # text = ""
         for x in range(10):
             coord = get_coord(x, y)
-            colours = get_rgb(coord)
+            colours = get_rgb(coord, img_rgb)
             result = get_result(colours)
             main.board[y][x] = result[1]
+            # print("Read board:", y, x, result[1])
+
 

@@ -47,6 +47,7 @@ def get_remaining_boats():
 
 
 def finish_game(game_no=1):
+    game_data = []
     start_time = datetime.now()
     count, game_finished = 0, False
     while not game_finished and count < 40:
@@ -55,40 +56,59 @@ def finish_game(game_no=1):
             game_finished = wait_for_next_round()
             if game_finished:
                 persistent_counter()
-                return count, datetime.now() - start_time
+                return game_data, count, datetime.now() - start_time
             read_board()
             remaining_boats = get_remaining_boats()
         print()
         print(f"Game: {game_no} Round: {count}")
+        # print("Game data:", game_data)
         shots = main.get_shots(remaining_boats=remaining_boats)
-        fire_shots(shots, shoot=True)
+        shots_made = fire_shots(shots, shoot=True)
+        data_to_save = (shots_made, len(remaining_boats))
+        game_data.append((data_to_save))
         # fire_shots(shots, shoot=False)
         count += 1
 
-def one_round():
+def one_round(shoot=False):
     read_board()
     remaining_boats = get_remaining_boats()
     shots = main.get_shots(remaining_boats=remaining_boats)
-    fire_shots(shots, shoot=False)
+    shots_made = fire_shots(shots, shoot=shoot)
+    data_to_save = (shots_made, len(remaining_boats))
+    return data_to_save
 
 
-def run(games=1):
+def run(hours=1/3):
+    if hours == 0:
+        games = 1
+    else:
+        games = int(hours * 15)
+    game_data_all = []
     game_times = []
     rounds_list = []
     for x in range(1, 1 + games):
         if rematch.find():rematch.click()
         result = finish_game(x)
         if result:
-            rounds, game_time = result
+            game_data, rounds, game_time = result
+            if len(game_data) > 0:
+                add_line_to_file(str(game_data))
+            game_data_all.append(game_data)
             game_times.append(game_time)
             rounds_list.append(rounds)
             print("\nGame times:")
-            for rounds, game_time in zip(rounds_list, game_times):
+            for game_data, rounds, game_time in zip(game_data_all, rounds_list, game_times):
                 try:
                     total_seconds = game_time.total_seconds()
                     print(f"Rounds: {rounds} {int(total_seconds // 60)}m {int(total_seconds % 60)}s" )
                 except:
                     pass
+            # for game_data, rounds, game_time in zip(game_data_all, rounds_list, game_times):
+            #     try:
+            #         print(game_data)
+            #     except:
+            #         pass
+
             average_time = (sum(game_times, timedelta()) / len(game_times)).total_seconds()
             average_rounds = round(sum(rounds_list) / len(rounds_list), 1)
 
@@ -101,8 +121,11 @@ def run(games=1):
 pyautogui.hotkey('alt', 'tab')
 sleep(0.5)
 
-run(games=5)
-# one_round()
+run(0)
+# result = one_round(shoot=True)
+# print("Data to save:", result)
+
+# read_board()
 
 sleep(1)
 pyautogui.hotkey('alt', 'tab')
