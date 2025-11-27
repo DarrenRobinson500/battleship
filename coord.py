@@ -17,12 +17,10 @@ def coord(x, y):
 def get_coord(x, y):
     global base
     if base is None:
-        # print("Looking for normal ai")
         i, found = 0, False
         while i < 5 and not found:
             normal_ai_coords = normal_ai.find()
             if normal_ai_coords:
-                # print("Normal ai found")
                 base = normal_ai_coords[0] + adj_x, normal_ai_coords[1] + adj_y
                 found = True
             sleep(0.1)
@@ -60,13 +58,16 @@ def fire_shots(shots, shoot=True):
             if result:
                 y, x = result
                 coord(x, y)
-                sleep(0.1)
+                sleep(0.2)
+                count += 1
         if fire.find():
             firing = False
             if shoot:
                 fire.click()
             sleep(2)
-        count += 1
+            return count
+    return count
+
 
 def get_result(colours):
     r, g, b = colours
@@ -76,12 +77,25 @@ def get_result(colours):
     if r > 150: result = "H", "hit"
     return result
 
+# def read_board():
+#     for y in range(10):
+#         # text = ""
+#         for x in range(10):
+#             coord = get_coord(x, y)
+#             colours = get_rgb(coord)
+#             result = get_result(colours)
+#             main.board[y][x] = result[1]
+
 def read_board():
+    # Take ONE screenshot of the whole board area
+    screenshot = pyautogui.screenshot() #region=(board_x, board_y, board_width, board_height))
+    img_rgb = np.array(screenshot)
+
     for y in range(10):
+        # text = ""
         for x in range(10):
             coord = get_coord(x, y)
-            colours = get_rgb(coord)
+            colours = get_rgb(coord, img_rgb)
             result = get_result(colours)
             main.board[y][x] = result[1]
-            # print("Read board:", x, y, colours, result)
 

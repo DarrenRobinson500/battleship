@@ -67,15 +67,25 @@ def files_in_directory(directory_path):
 
 
 
-def get_rgb(coord):
-    x, y = coord
-    # print("Get rgb:", x, y)
-    screenshot = pyautogui.screenshot(region=(x-1, y-1, 3, 3))
-    img = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+# def get_rgb(coord):
+#     x, y = coord
+#
+#     screenshot = pyautogui.screenshot(region=(x-4, y-4, 9, 9))
+#     img = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+#     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+#
+#     avg_color = img_rgb.mean(axis=(0, 1))  # shape: (3,)
+#     r, g, b = map(int, avg_color)  # Convert each to plain int
+#     return r, g, b
 
-    avg_color = img_rgb.mean(axis=(0, 1))  # shape: (3,)
-    r, g, b = map(int, avg_color)  # Convert each to plain int
+def get_rgb(coord, image):
+    x, y = coord
+
+    # Crop the 9x9 region from the single screenshot
+    region = image[y-4:y+5, x-4:x+5]
+
+    avg_color = region.mean(axis=(0, 1))  # shape: (3,)
+    r, g, b = map(int, avg_color)
     return r, g, b
 
 def get_grandchildren(parent_set):

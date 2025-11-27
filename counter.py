@@ -27,6 +27,7 @@ def tasks_done_so_far(total_tasks=500):
     print(f"Remaining Games: {should_be_done} - {actually_done} = {remaining} ({percentage}%)")
 
 COUNTER_FILE = "function_count.txt"
+GAME_DATA_FILE = "game_data.txt"
 
 def read_count():
     if not os.path.exists(COUNTER_FILE):
@@ -51,11 +52,18 @@ def reset_counter():
     write_count(0)
     print("Counter has been reset to 0.")
 
-# Example usage
+def add_line_to_file(line_text, file_path=GAME_DATA_FILE):
+    try:
+        with open(file_path, "a") as file:  # "a" mode = append
+            file.write(line_text + "\n")
+        print(f"Line added to {file_path}")
+    except Exception as e:
+        print(f"Error: {e}")
 
-# To reset the counter, call:
+
+tasks_done_so_far()
 # reset_counter()
 
 
 # Game counter at zero with 120k
-# tasks_done_so_far()
+tasks_done_so_far()
